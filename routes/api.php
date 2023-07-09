@@ -16,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/storage/create-folder', [StorageController::class, 'create_folder']);
     Route::post('/storage/upload', [StorageController::class, 'file_upload']);
+    Route::get('/storage/download/{item_id}', [StorageController::class, 'file_download']);
     Route::post('/storage/file-delete', [StorageController::class, 'file_delete']);
     Route::post('/storage/folder-delete', [StorageController::class, 'folder_delete']);
     Route::get('/storage/{folder_id}', [StorageController::class, 'get_item']);

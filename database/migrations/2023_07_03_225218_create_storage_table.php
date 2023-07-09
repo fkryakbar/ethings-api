@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('item_id')->unique();
             $table->string('user_id');
             $table->string('name');
+            $table->string('file_size')->nullable();
             $table->string('type')->default('folder');
             $table->string('real_path')->nullable();
             $table->string('access')->default('private');

@@ -45,7 +45,8 @@ class StorageController extends Controller
                 'item_id' => $path,
                 'real_path' => $path,
                 'type' => $file->getClientOriginalExtension(),
-                'name' => $file->getClientOriginalName()
+                'name' => $file->getClientOriginalName(),
+                'file_size' => number_format(($file->getSize() / 1000), 2) . ' KB'
             ]);
             // return $request->all();
             Storage::create($request->except(['file']));
@@ -139,5 +140,24 @@ class StorageController extends Controller
             ]);
         }
         return response(['message' => 'Item not found'], 404);
+    }
+
+
+    public function file_download($item_id, Request $request)
+    {
+        $file = Storage::where('item_id', $item_id)->where('user_id',  $request->user()->user_id)->where('type', '!=', 'folder')->first();
+
+        if ($file) {
+            if (FacadesStorage::exists($file->real_path)) {
+                $headers = [
+                    'Content-Type' => FacadesStorage::mimeType($file->real_path),
+                    'Content-Disposition' => 'attachment; filename=' . $file->name,
+                ];
+                return response()->download(storage_path('app/public/') . $file->real_path, $file->name, $headers);
+            }
+            return response(['message' => 'File missing'], 404);
+        }
+
+        return response(['message' => 'File Not Found'], 404);
     }
 }
