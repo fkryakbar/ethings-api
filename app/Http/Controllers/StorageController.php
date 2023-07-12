@@ -149,7 +149,6 @@ class StorageController extends Controller
     {
         $cookie = $_COOKIE['token_session'];
         $cookie = explode('|', $cookie)[1];
-        return $cookie;
         $token = DB::table('personal_access_tokens')->where('token', hash('sha256', $cookie))->first();
         if (!$token) {
             return response(['message' => 'File Not Found'], 404);
