@@ -109,7 +109,7 @@ class StorageController extends Controller
         if ($folder_id != 'root') {
             $folder = Storage::where('item_id', $folder_id)->first();
             if ($folder && $folder->type == 'folder') {
-                $items = Storage::where('belongs_to', $folder_id)->get();
+                $items = Storage::where('belongs_to', $folder_id)->with('user')->get();
                 return response([
                     'message' => 'Success',
                     'data' => $items
@@ -117,7 +117,7 @@ class StorageController extends Controller
             }
             return response(['message' => "It's not a folder"], 422);
         }
-        $items = Storage::where('belongs_to', 'root')->get();
+        $items = Storage::where('belongs_to', 'root')->with('user')->get();
         return response([
             'message' => 'Success',
             'data' => $items

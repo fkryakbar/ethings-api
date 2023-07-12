@@ -16,7 +16,7 @@ class PublicController extends Controller
             if ($folder->access == 'public') {
                 return response([
                     'message' => 'Item received',
-                    'data' => Storage::where('belongs_to', $folder_id)->get()
+                    'data' => Storage::where('belongs_to', $folder_id)->with('user')->get()
                 ]);
             }
             return response([
