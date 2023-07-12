@@ -148,8 +148,9 @@ class StorageController extends Controller
     public function file_download($item_id, Request $request)
     {
         $cookie = $request->cookie('token_session');
-        $cookie = explode('|', $cookie);
-        $token = DB::table('personal_access_tokens')->where('token', hash('sha256', $cookie[1]))->first();
+        $cookie = explode('|', $cookie)[1];
+        return $cookie;
+        $token = DB::table('personal_access_tokens')->where('token', hash('sha256', $cookie))->first();
         if (!$token) {
             return response(['message' => 'File Not Found'], 404);
         }
