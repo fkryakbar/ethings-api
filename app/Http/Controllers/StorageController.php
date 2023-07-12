@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Storage;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage as FacadesStorage;
 use Illuminate\Validation\ValidationException;
 
@@ -145,19 +147,26 @@ class StorageController extends Controller
 
     public function file_download($item_id, Request $request)
     {
-        $file = Storage::where('item_id', $item_id)->where('user_id',  $request->user()->user_id)->where('type', '!=', 'folder')->first();
-
-        if ($file) {
-            if (FacadesStorage::exists($file->real_path)) {
-                $headers = [
-                    'Content-Type' => FacadesStorage::mimeType($file->real_path),
-                    'Content-Disposition' => 'attachment; filename=' . $file->name,
-                ];
-                return response()->download(storage_path('app/public/') . $file->real_path, $file->name, $headers);
-            }
-            return response(['message' => 'File missing'], 404);
+        $cookie = $request->cookie('token_session');
+        $cookie = explode('|', $cookie);
+        $token = DB::table('personal_access_tokens')->where('token', hash('sha256', $cookie[1]))->first();
+        if (!$token) {
+            return response(['message' => 'File Not Found'], 404);
         }
-
+        $user = User::find($token->tokenable_id);
+        if ($user) {
+            $file = Storage::where('item_id', $item_id)->where('user_id',  $user->user_id)->where('type', '!=', 'folder')->first();
+            if ($file) {
+                if (FacadesStorage::exists($file->real_path)) {
+                    $headers = [
+                        'Content-Type' => FacadesStorage::mimeType($file->real_path),
+                        'Content-Disposition' => 'attachment; filename=' . $file->name,
+                    ];
+                    return response()->download(storage_path('app/public/') . $file->real_path, $file->name, $headers);
+                }
+                return response(['message' => 'File missing'], 404);
+            }
+        }
         return response(['message' => 'File Not Found'], 404);
     }
 }
