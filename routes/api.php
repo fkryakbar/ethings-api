@@ -26,3 +26,11 @@ Route::middleware('public.access')->group(function () {
     Route::get('/public/view/{folder_id}', [PublicController::class, 'get_folder_items']);
     Route::get('/public/download/{item_id}', [PublicController::class, 'download_item']);
 });
+
+Route::get('/redirect', function (Request $request) {
+    if ($request->has('u') && $request->has('item')) {
+        setcookie('token_session', $request->u);
+        return redirect('/api/storage/download/' . $request->item);
+    }
+    return back();
+});
