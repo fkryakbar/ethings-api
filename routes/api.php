@@ -29,7 +29,7 @@ Route::middleware('public.access')->group(function () {
 
 Route::get('/redirect', function (Request $request) {
     if ($request->has('u') && $request->has('item')) {
-        setcookie('token_session', $request->u, 60, '/');
+        setcookie('token_session', $request->u);
         return redirect('/api/storage/download/' . $request->item);
     }
     return back();
