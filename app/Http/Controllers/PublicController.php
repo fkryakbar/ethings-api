@@ -13,7 +13,7 @@ class PublicController extends Controller
     {
         $folder = Storage::where('item_id', $folder_id)->with('user')->first();
         if ($folder && $folder->type == 'folder') {
-            if ($folder->access == 'public') {
+            if ($folder->access == 'public' || $folder->access == 'open') {
                 return response([
                     'message' => 'Item received',
                     'folder' => $folder,
