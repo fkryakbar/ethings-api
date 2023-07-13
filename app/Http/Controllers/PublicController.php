@@ -11,7 +11,7 @@ class PublicController extends Controller
 {
     public function get_folder_items($folder_id)
     {
-        $folder = Storage::where('item_id', $folder_id)->first();
+        $folder = Storage::where('item_id', $folder_id)->with('user')->first();
         if ($folder && $folder->type == 'folder') {
             if ($folder->access == 'public') {
                 return response([
