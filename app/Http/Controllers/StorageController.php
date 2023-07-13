@@ -120,7 +120,7 @@ class StorageController extends Controller
             }
             return response(['message' => "It's not a folder"], 422);
         }
-        $items = Storage::where('belongs_to', 'root')->with('user')->get();
+        $items = Storage::where('belongs_to', 'root')->where('user_id', $request->user()->user_id)->with('user')->get();
         return response([
             'message' => 'Success',
             'data' => $items
