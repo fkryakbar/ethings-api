@@ -32,8 +32,9 @@ class PublicController extends Controller
     public function download_item($item_id)
     {
         $item = Storage::where('item_id', $item_id)->first();
+        $the_folder = Storage::where('item_id', $item->belongs_to)->first();
         if ($item && $item->type != 'folder') {
-            if ($item->access == 'public') {
+            if ($item->access == 'public' || $item->access == 'open' || $the_folder->access == 'public' || $the_folder->access == 'open') {
                 if (FacadesStorage::exists($item->real_path)) {
                     $headers = [
                         'Content-Type' => FacadesStorage::mimeType($item->real_path),
