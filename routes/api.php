@@ -21,11 +21,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/storage/{folder_id}', [StorageController::class, 'get_item']);
     Route::post('/storage/update/{item_id}', [StorageController::class, 'update_item']);
 });
-Route::get('/storage/download/{item_id}', [StorageController::class, 'file_download']);
 Route::middleware('public.access')->group(function () {
     Route::get('/public/view/{folder_id}', [PublicController::class, 'get_folder_items']);
-    Route::get('/public/download/{item_id}', [PublicController::class, 'download_item']);
 });
+Route::get('/storage/download/{item_id}', [StorageController::class, 'file_download']);
+Route::get('/public/download/{item_id}', [PublicController::class, 'download_item']);
 
 Route::get('/redirect', function (Request $request) {
     if ($request->has('u') && $request->has('item')) {
