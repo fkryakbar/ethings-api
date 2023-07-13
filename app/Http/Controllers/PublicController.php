@@ -51,4 +51,74 @@ class PublicController extends Controller
         }
         return response(['message' => 'Item not found'], 404);
     }
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            "file" => ["required"],
+            "file.*" => ["required", 'max:5120'],
+        ]);
+        if ($request->belongs_to) {
+            $isValid = Storage::where('item_id', $request->belongs_to)->where('access', 'open')->first();
+            if (!$isValid) {
+                return response(['message' => 'Folder is not valid'], 422);
+            }
+        }
+        foreach ($request->file('file') as $file) {
+            $path = $file->store('');
+
+            $request->merge([
+                'user_id' => 'Public',
+                'item_id' => $path,
+                'real_path' => $path,
+                'type' => $file->getClientOriginalExtension(),
+                'name' => $file->getClientOriginalName(),
+                'file_size' => number_format(($file->getSize() / 1000), 2) . ' KB'
+            ]);
+            Storage::create($request->except(['file']));
+        }
+        return response([
+            'message' => 'File(s) Uploaded'
+        ]);
+    }
+
+    public function delete_file(Request $request)
+    {
+        $request->validate([
+            'item_ids' => ['array', 'required']
+        ]);
+
+        foreach ($request->item_ids as $item_id) {
+            $item = Storage::where('item_id', $item_id)->first();
+            if ($item) {
+                $the_folder = Storage::where('item_id', $item->belongs_to)->first();
+                if ($item->type != 'folder' && ($the_folder->access != 'private' || $the_folder->access != 'public')) {
+                    return response(['message' => 'Access denied'], 422);
+                }
+            } else {
+                return response(['message' => 'Item Not found'], 404);
+            }
+        }
+        foreach ($request->item_ids as $item_id) {
+            $item = Storage::where('item_id', $item_id)->first();
+            FacadesStorage::delete($item->real_path);
+            $item->delete();
+        }
+    }
+
+    public function update_file(Request $request, $item_id)
+    {
+        $request->validate([
+            'name' => 'required|max:40',
+        ]);
+        $item = Storage::where('item_id', $item_id)->where('access', 'open')->where('type', '!=', 'folder')->first();
+        if ($item) {
+            $item->update($request->only(['name']));
+            return response([
+                'message' => 'Item Updated',
+                'data' => $item
+            ]);
+        }
+        return response(['message' => 'Item not found'], 404);
+    }
 }

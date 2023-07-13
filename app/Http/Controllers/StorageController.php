@@ -50,7 +50,6 @@ class StorageController extends Controller
                 'name' => $file->getClientOriginalName(),
                 'file_size' => number_format(($file->getSize() / 1000), 2) . ' KB'
             ]);
-            // return $request->all();
             Storage::create($request->except(['file']));
         }
         return response([

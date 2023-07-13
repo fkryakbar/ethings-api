@@ -22,6 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/storage/update/{item_id}', [StorageController::class, 'update_item']);
 });
 Route::middleware('public.access')->group(function () {
+    Route::post('/public/update/{item_id}', [PublicController::class, 'update_file']);
+    Route::post('/public/file-delete', [PublicController::class, 'delete_file']);
+    Route::post('/public/upload', [PublicController::class, 'upload']);
     Route::get('/public/view/{folder_id}', [PublicController::class, 'get_folder_items']);
 });
 Route::get('/storage/download/{item_id}', [StorageController::class, 'file_download']);
