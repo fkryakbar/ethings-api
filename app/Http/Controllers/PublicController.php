@@ -37,7 +37,7 @@ class PublicController extends Controller
                 if (FacadesStorage::exists($item->real_path)) {
                     $headers = [
                         'Content-Type' => FacadesStorage::mimeType($item->real_path),
-                        'Content-Disposition' => 'attachment; filename=' . $item->name,
+                        'Content-Disposition' => 'inline; filename=' . $item->name,
                     ];
                     return response()->download(storage_path('app/public/') . $item->real_path, $item->name, $headers);
                 }

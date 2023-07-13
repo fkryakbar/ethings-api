@@ -161,7 +161,7 @@ class StorageController extends Controller
                 if (FacadesStorage::exists($file->real_path)) {
                     $headers = [
                         'Content-Type' => FacadesStorage::mimeType($file->real_path),
-                        'Content-Disposition' => 'attachment; filename=' . $file->name,
+                        'Content-Disposition' => 'inline; filename=' . $file->name,
                     ];
                     return response()->download(storage_path('app/public/') . $file->real_path, $file->name, $headers);
                 }
