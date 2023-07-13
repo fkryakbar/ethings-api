@@ -162,6 +162,9 @@ class StorageController extends Controller
                     $headers = [
                         'Content-Type' => FacadesStorage::mimeType($file->real_path),
                         'Content-Disposition' => 'inline; filename=' . $file->name,
+                        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                        'Pragma' => 'no-cache',
+                        'Expires' => '0',
                     ];
                     return response()->file(storage_path('app/public/') . $file->real_path, $headers);
                 }

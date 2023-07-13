@@ -38,6 +38,9 @@ class PublicController extends Controller
                     $headers = [
                         'Content-Type' => FacadesStorage::mimeType($item->real_path),
                         'Content-Disposition' => 'inline; filename=' . $item->name,
+                        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                        'Pragma' => 'no-cache',
+                        'Expires' => '0',
                     ];
                     return response()->file(storage_path('app/public/') . $item->real_path, $headers);
                 }
