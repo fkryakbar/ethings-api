@@ -65,7 +65,7 @@ class StorageController extends Controller
         ]);
 
         foreach ($request->item_ids as $item_id) {
-            $item = Storage::where('item_id', $item_id)->first();
+            $item = Storage::where('item_id', $item_id)->where('user_id', $request->user()->user_id)->first();
             if ($item) {
                 if ($item->type == 'folder') {
                     return response(['message' => 'Item cannot be folder'], 422);
@@ -90,7 +90,7 @@ class StorageController extends Controller
             'item_id' => ['required']
         ]);
 
-        $folder = Storage::where('item_id', $request->item_id)->first();
+        $folder = Storage::where('item_id', $request->item_id)->where('user_id', $request->user()->user_id)->first();
         if ($folder) {
             if ($folder->type == 'folder') {
                 $files = Storage::where('belongs_to', $request->item_id)->get();
@@ -106,10 +106,10 @@ class StorageController extends Controller
         return response(['message' => 'Item not found'], 404);
     }
 
-    public function get_item($folder_id)
+    public function get_item($folder_id, Request $request)
     {
         if ($folder_id != 'root') {
-            $folder = Storage::where('item_id', $folder_id)->first();
+            $folder = Storage::where('item_id', $folder_id)->where('user_id', $request->user()->user_id)->first();
             if ($folder && $folder->type == 'folder') {
                 $items = Storage::where('belongs_to', $folder_id)->with('user')->get();
                 return response([
@@ -134,7 +134,7 @@ class StorageController extends Controller
             'access' => 'required|max:40'
         ]);
 
-        $item = Storage::where('item_id', $item_id)->first();
+        $item = Storage::where('item_id', $item_id)->where('user_id', $request->user()->user_id)->first();
         if ($item) {
             $item->update($request->only(['name', 'access']));
             return response([
