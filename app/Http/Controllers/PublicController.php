@@ -39,7 +39,7 @@ class PublicController extends Controller
                         'Content-Type' => FacadesStorage::mimeType($item->real_path),
                         'Content-Disposition' => 'inline; filename=' . $item->name,
                     ];
-                    return response()->download(storage_path('app/public/') . $item->real_path, $item->name, $headers);
+                    return response()->file(storage_path('app/public/') . $item->real_path, $item->name, $headers);
                 }
                 return response(['message' => 'File missing'], 404);
             }
