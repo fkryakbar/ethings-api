@@ -114,6 +114,7 @@ class StorageController extends Controller
                 $items = Storage::where('belongs_to', $folder_id)->with('user')->get();
                 return response([
                     'message' => 'Success',
+                    'folder' => $folder,
                     'data' => $items
                 ]);
             }
