@@ -163,7 +163,7 @@ class StorageController extends Controller
                         'Content-Type' => FacadesStorage::mimeType($file->real_path),
                         'Content-Disposition' => 'inline; filename=' . $file->name,
                     ];
-                    return response()->file(storage_path('app/public/') . $file->real_path, $file->name, $headers);
+                    return response()->file(storage_path('app/public/') . $file->real_path, $headers);
                 }
                 return response(['message' => 'File missing'], 404);
             }
