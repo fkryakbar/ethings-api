@@ -93,7 +93,7 @@ class PublicController extends Controller
             $item = Storage::where('item_id', $item_id)->first();
             if ($item) {
                 $the_folder = Storage::where('item_id', $item->belongs_to)->first();
-                if ($item->type != 'folder' && ($the_folder->access != 'private' || $the_folder->access != 'public')) {
+                if ($item->type == 'folder' && ($the_folder->access == 'private' || $the_folder->access == 'public')) {
                     return response(['message' => 'Access denied'], 422);
                 }
             } else {
