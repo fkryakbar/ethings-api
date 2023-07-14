@@ -113,8 +113,9 @@ class PublicController extends Controller
         $request->validate([
             'name' => 'required|max:40',
         ]);
-        $item = Storage::where('item_id', $item_id)->where('access', 'open')->where('type', '!=', 'folder')->first();
-        if ($item) {
+        $item = Storage::where('item_id', $item_id)->where('type', '!=', 'folder')->first();
+        $the_folder = Storage::where('item_id', $item->belongs_to)->where('access', 'open')->where('type', 'folder')->first();
+        if ($item && $the_folder) {
             $item->update($request->only(['name']));
             return response([
                 'message' => 'Item Updated',
