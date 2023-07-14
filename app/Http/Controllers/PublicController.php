@@ -57,6 +57,7 @@ class PublicController extends Controller
         $request->validate([
             "file" => ["required"],
             "file.*" => ["required", 'max:5120'],
+            "belongs_to" => ['required']
         ]);
         if ($request->belongs_to) {
             $isValid = Storage::where('item_id', $request->belongs_to)->where('access', 'open')->first();
