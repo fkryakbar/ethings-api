@@ -69,7 +69,7 @@ class PublicController extends Controller
             $path = $file->store('');
 
             $request->merge([
-                'user_id' => 'Public',
+                'user_id' =>  $isValid->user_id,
                 'item_id' => $path,
                 'real_path' => $path,
                 'type' => $file->getClientOriginalExtension(),
