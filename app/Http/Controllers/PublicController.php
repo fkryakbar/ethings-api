@@ -105,6 +105,7 @@ class PublicController extends Controller
             FacadesStorage::delete($item->real_path);
             $item->delete();
         }
+        return response(['message' => 'Item Deleted']);
     }
 
     public function update_file(Request $request, $item_id)
