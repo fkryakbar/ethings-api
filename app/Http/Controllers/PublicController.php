@@ -5,10 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage as FacadesStorage;
 
 class PublicController extends Controller
 {
+    private function generate_id()
+    {
+        $str = Str::random(4) . '-' . Str::random(3) . '-' . Str::random(3);
+        return $str;
+    }
     public function get_folder_items($folder_id)
     {
         $folder = Storage::where('item_id', $folder_id)->with('user')->first();
@@ -70,7 +76,7 @@ class PublicController extends Controller
 
             $request->merge([
                 'user_id' =>  $isValid->user_id,
-                'item_id' => $path,
+                'item_id' => $this->generate_id() . '.' . $file->getClientOriginalExtension(),
                 'real_path' => $path,
                 'type' => $file->getClientOriginalExtension(),
                 'name' => $file->getClientOriginalName(),

@@ -12,6 +12,11 @@ use Illuminate\Validation\ValidationException;
 
 class StorageController extends Controller
 {
+    private function generate_id()
+    {
+        $str = Str::random(4) . '-' . Str::random(3) . '-' . Str::random(3);
+        return $str;
+    }
     public function create_folder(Request $request)
     {
         $request->validate([
@@ -19,7 +24,7 @@ class StorageController extends Controller
         ]);
 
         $request->merge([
-            'item_id' => Str::uuid(),
+            'item_id' => $this->generate_id(),
             'user_id' => $request->user()->user_id,
         ]);
 
@@ -44,7 +49,7 @@ class StorageController extends Controller
 
             $request->merge([
                 'user_id' => $request->user()->user_id,
-                'item_id' => $path,
+                'item_id' => $this->generate_id() . '.' . $file->getClientOriginalExtension(),
                 'real_path' => $path,
                 'type' => $file->getClientOriginalExtension(),
                 'name' => $file->getClientOriginalName(),
