@@ -20,7 +20,7 @@ class StorageController extends Controller
     public function create_folder(Request $request)
     {
         $request->validate([
-            'name' => 'max:20|required',
+            'name' => 'max:40|required',
         ]);
 
         $request->merge([
