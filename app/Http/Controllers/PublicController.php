@@ -62,7 +62,7 @@ class PublicController extends Controller
     {
         $request->validate([
             "file" => ["required"],
-            "file.*" => ["required", 'max:5120'],
+            "file.*" => ["required", 'max:10000'],
             "belongs_to" => ['required']
         ]);
         if ($request->belongs_to) {

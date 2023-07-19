@@ -36,7 +36,7 @@ class StorageController extends Controller
     {
         $request->validate([
             "file" => ["required"],
-            "file.*" => ["required", 'max:5120'],
+            "file.*" => ["required", 'max:30000'],
         ]);
         if ($request->belongs_to) {
             $isValid = Storage::where('item_id', $request->belongs_to)->first();
